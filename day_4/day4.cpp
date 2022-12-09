@@ -3,13 +3,14 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <regex>
+#include <regex> // NOLINT [build/c++11]
 #include <vector>
 
 int main() {
   std::regex rgx("(\\d+)-(\\d+),(\\d+)-(\\d+)");
   std::string line;
   int totalOverlaps = 0;
+  int totalOverlapsPart2 = 0;
 
   std::ifstream sectionAssignmentFile("input.txt");
   while (std::getline(sectionAssignmentFile, line)) {
@@ -34,8 +35,19 @@ int main() {
           totalOverlaps++;
         }
       }
+
+      if (start1 <= start2) {
+        if (end1 >= start2) {
+          totalOverlapsPart2++;
+        }
+      } else {
+        if (end2 >= start1) {
+          totalOverlapsPart2++;
+        }
+      }
     }
   }
   sectionAssignmentFile.close();
   std::cout << totalOverlaps << "\n";
+  std::cout << totalOverlapsPart2 << "\n";
 }
