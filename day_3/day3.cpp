@@ -19,6 +19,17 @@ char findDupe(std::string strA, std::string strB) {
   return ' ';
 }
 
+char findTripleDupe(std::string strA, std::string strB, std::string strC) {
+  for (char &c : strA) {
+    if (strB.find(c) != std::string::npos) {
+      if (strC.find(c) != std::string::npos) {
+        return c;
+      }
+    }
+  }
+  return ' ';
+}
+
 int itemPriority(char item) {
   int ascii_code = static_cast<int>(item);
   return (ascii_code >= LOWERCASE_A && ascii_code <= LOWERCASE_Z)
@@ -29,6 +40,9 @@ int itemPriority(char item) {
 int main() {
   std::string line;
   int totalPriority = 0;
+  int totalPriorityPart2 = 0;
+  std::vector<std::string> loadedRucksacks(3, "");
+  int index = 0;
 
   std::ifstream rucksackContentsFile("input.txt");
   while (std::getline(rucksackContentsFile, line)) {
@@ -38,7 +52,16 @@ int main() {
 
     char dupeItem = findDupe(rucksackA, rucksackB);
     totalPriority += itemPriority(dupeItem);
+
+    loadedRucksacks.at(index % 3) = line;
+    if (index % 3 == 2) {
+      char tripleDupeItem = findTripleDupe(
+          loadedRucksacks.at(0), loadedRucksacks.at(1), loadedRucksacks.at(2));
+      totalPriorityPart2 += itemPriority(tripleDupeItem);
+    }
+    index++;
   }
   rucksackContentsFile.close();
   std::cout << totalPriority << "\n";
+  std::cout << totalPriorityPart2 << "\n";
 }
